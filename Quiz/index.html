@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Spécial pour Maman !</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f8f9fa; /* Fond légèrement gris */
+            color: #333;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); /* Ombre plus prononcée */
+        }
+        .question-block {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0; /* Bordure plus douce */
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        .question-block img {
+            max-width: 95%; /* Légèrement plus grand */
+            max-height: 400px; /* Limite la hauteur pour les photos portrait */
+            object-fit: contain; /* S'assure que l'image entière est visible */
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px; /* Coins arrondis pour l'image */
+            border: 1px solid #f0f0f0; /* Bordure très légère pour l'image */
+        }
+        h1 {
+            color: #e83e8c; /* Un joli rose pour Maman */
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #007bff; /* Bleu pour les titres de question */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block; /* Pour que le label soit au-dessus de l'input */
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"] {
+            padding: 12px;
+            margin-right: 10px;
+            border: 1px solid #ced4da; /* Bordure standard */
+            border-radius: 6px;
+            width: 120px; /* Largeur ajustée */
+            text-align: center;
+            font-size: 16px;
+        }
+        input[type="text"]:focus {
+            border-color: #80bdff; /* Indicateur de focus */
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #28a745; /* Vert pour valider */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px; /* Espace au-dessus du bouton */
+            transition: background-color 0.2s ease-in-out;
+        }
+        button:hover {
+            background-color: #218838; /* Vert plus foncé au survol */
+        }
+        button:disabled {
+            background-color: #6c757d; /* Gris quand désactivé */
+            cursor: not-allowed;
+        }
+        button.next-btn {
+            background-color: #007bff; /* Bleu pour "Question suivante" */
+        }
+        button.next-btn:hover {
+            background-color: #0056b3; /* Bleu plus foncé au survol */
+        }
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .correct {
+            color: #155724; /* Vert foncé pour texte correct */
+            background-color: #d4edda; /* Fond vert clair */
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            color: #721c24; /* Rouge foncé pour texte incorrect */
+            background-color: #f8d7da; /* Fond rouge clair */
+            border: 1px solid #f5c6cb;
+        }
+        .hidden {
+            display: none;
+        }
+        #final-message-container {
+            padding: 40px 20px; /* Plus de padding */
+            border: 3px dashed #e83e8c; /* Bordure en tirets rose */
+            border-radius: 15px;
+            background-color: #fff0f7; /* Fond rose très pâle */
+            margin-top: 30px;
+        }
+        #final-message-text {
+            font-size: 2.8em; /* Taille augmentée */
+            color: #e83e8c;
+            font-weight: bold;
+            animation: pulseEffect 1.8s infinite ease-in-out;
+        }
+        @keyframes pulseEffect { /* Animation de pulsation améliorée */
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        .instructions {
+            margin-top: 40px;
+            padding: 20px;
+            background-color:#e9ecef; /* Fond gris clair pour les instructions */
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .instructions strong {
+            color: #007bff;
+        }
+        .instructions code {
+            background-color: #d1ecf1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Quiz Photo Souvenirs !</h1>
+        <p>Maman, sauras-tu retrouver l'année de ces beaux moments ?</p>
+
+        <div id="quiz-area">
+            </div>
+
+        <div id="final-message-container" class="hidden">
+            <p id="final-message-text">Bonne fête Maman ! ❤️</p>
+        </div>
+
+
+    <script>
+        // *****************************************************************************
+        // ** SECTION À MODIFIER POUR PERSONNALISER LE QUIZ **
+        // *****************************************************************************
+        // Modifiez les informations ci-dessous avec vos propres liens d'images et les années correctes.
+        const questionsData = [
+            {
+                // Question 1
+                imageSrc: "https://www.dropbox.com/scl/fi/dhr08432dmibuowfv1qpn/B27A0472.jpg?rlkey=42qwvduab7zrdmoz4fpckctjw&raw=1", // REMPLACEZ CECI par le lien URL de votre première photo
+                correctYear: "2015" // REMPLACEZ CECI par l'année correcte (ex: "1995")
+            },
+            {
+                // Question 2
+                imageSrc: "https://www.dropbox.com/scl/fi/zmzjtxfmg96c1s3i57ngo/IMG_3063.JPG?rlkey=nifwah2ia8ouz17dsv9oyul0f&raw=1", // REMPLACEZ CECI par le lien URL de votre deuxième photo
+                correctYear: "2016" // REMPLACEZ CECI par l'année correcte (ex: "2003")
+            },
+            {
+                // Question 3
+                imageSrc: "https://www.dropbox.com/scl/fi/398paomr1tnf3o6pm2sfm/IMG-20230505-WA0073.jpg?rlkey=s1dmp8m3m5iso4jquyzuj6cyc&raw=1", // REMPLACEZ CECI par le lien URL de votre troisième photo
+                correctYear: "2023" // REMPLACEZ CECI par l'année correcte
+            },
+            {
+                // Question 4
+                imageSrc: "https://www.dropbox.com/scl/fi/uwqupotg9h34ekr47llmx/P1020468.JPG?rlkey=5cgm986zs8ahi5zocfetwm043&raw=1", // REMPLACEZ CECI par le lien URL de votre quatrième photo
+                correctYear: "2010" // REMPLACEZ CECI par l'année correcte
+            },
+            {
+                // Question 5
+                imageSrc: "https://www.dropbox.com/scl/fi/kx8hmxckelzge3k2mmyew/P1020498.JPG?rlkey=ilhgzyi4lppit1oyd2oi3j61t&raw=1", // REMPLACEZ CECI par le lien URL de votre cinquième photo
+                correctYear: "2011" // REMPLACEZ CECI par l'année correcte
+            }
+        ];
+        // *****************************************************************************
+        // ** FIN DE LA SECTION À MODIFIER **
+        // *****************************************************************************
+
+        let currentQuestionIndex = 0;
+        const quizArea = document.getElementById('quiz-area');
+        const finalMessageContainer = document.getElementById('final-message-container');
+
+        function displayQuestion() {
+            // Cacher le message final au cas où
+            finalMessageContainer.classList.add('hidden');
+            quizArea.classList.remove('hidden');
+
+            if (currentQuestionIndex < questionsData.length) {
+                const question = questionsData[currentQuestionIndex];
+                quizArea.innerHTML = `
+                    <div class="question-block" id="question-${currentQuestionIndex}">
+                        <h2>Question ${currentQuestionIndex + 1} sur ${questionsData.length}</h2>
+                        <img src="${question.imageSrc}" alt="Photo souvenir ${currentQuestionIndex + 1}" onerror="this.alt='Lien image invalide ou image non chargée'; this.src='';"> <br>
+                        <label for="year-guess">En quelle année cette photo a-t-elle été prise ?</label>
+                        <input type="text" id="year-guess" name="year-guess" placeholder="Ex: 2000" maxlength="4" pattern="[0-9]{4}">
+                        <br>
+                        <button onclick="checkAnswer()">Valider ma réponse</button>
+                        <div class="feedback" id="feedback-message"></div>
+                        <button onclick="nextQuestion()" class="next-btn hidden" id="next-button">Question suivante</button>
+                    </div>
+                `;
+                // Mettre le focus sur le champ de saisie
+                const inputField = document.getElementById('year-guess');
+                if(inputField) inputField.focus();
+            } else {
+                // Fin du quiz, afficher le message final
+                quizArea.classList.add('hidden');
+                finalMessageContainer.classList.remove('hidden');
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('year-guess').value.trim();
+            const feedbackMessage = document.getElementById('feedback-message');
+            const nextButton = document.getElementById('next-button');
+            const validateButton = document.querySelector(`#question-${currentQuestionIndex} button[onclick="checkAnswer()"]`);
+            const inputField = document.getElementById('year-guess');
+
+            if (!userAnswer) { // Vérifie si le champ n'est pas vide
+                feedbackMessage.textContent = "Veuillez entrer une année.";
+                feedbackMessage.className = 'feedback incorrect'; // Ou un style neutre
+                return; // Ne pas continuer si vide
+            }
+            
+            // Désactiver le bouton Valider et le champ de saisie après une tentative
+            if(validateButton) validateButton.disabled = true;
+            if(inputField) inputField.disabled = true;
+
+            const currentQuestionData = questionsData[currentQuestionIndex];
+
+            if (userAnswer === currentQuestionData.correctYear) {
+                feedbackMessage.textContent = "Bravo Maman! C'est la bonne réponse ! 🎉";
+                feedbackMessage.className = 'feedback correct';
+            } else {
+                feedbackMessage.textContent = `Presque ! La bonne année était ${currentQuestionData.correctYear}. 😊`;
+                feedbackMessage.className = 'feedback incorrect';
+            }
+            
+            if(nextButton) {
+                nextButton.classList.remove('hidden');
+                nextButton.focus(); // Mettre le focus sur le bouton "Question suivante"
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+
+        // Démarrer le quiz au chargement de la page
+        document.addEventListener('DOMContentLoaded', displayQuestion);
+    </script>
+
+</body>
+</html>
